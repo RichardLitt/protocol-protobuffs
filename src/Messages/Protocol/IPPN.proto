@@ -21,9 +21,9 @@ syntax = "proto3";
 
 package Catalyst.Messages.Protocol.IPPN;
 
-import "../../Common/Delta.proto";
-import "../../Common/Peer.proto";
-import "../../Common/Transaction.proto";
+import "Common/Delta.proto";
+import "Common/Peer.proto";
+import "Common/Transaction.proto";
 
 /**
 * A wrapper around the service message, the contents of service message should be signed by the sender to avoid tampering mid-transit.
