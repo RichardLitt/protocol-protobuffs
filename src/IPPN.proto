@@ -19,11 +19,11 @@
 
 syntax = "proto3";
 
-package Catalyst.Messages.Protocol.IPPN;
+package Catalyst.Sdk.Messages.IPPN;
 
-import "Common/Delta.proto";
-import "Common/Peer.proto";
-import "Common/Transaction.proto";
+import "Delta.proto";
+import "Peer.proto";
+import "Transaction.proto";
 
 /**
 * A wrapper around the service message, the contents of service message should be signed by the sender to avoid tampering mid-transit.
@@ -42,7 +42,7 @@ message IPPNMessageSigned {
 * - value is the actual value of the message being wrapped (cf Any from protobuf WellKnownTypes)
 */
 message IPPNMessage {
-    Catalyst.Common.Peer.PeerId peerId = 1;
+    Catalyst.Sdk.Peer.PeerId peerId = 1;
     bytes correlationId = 2;
     string type_url = 3;
     bytes value = 4;
@@ -55,7 +55,7 @@ message PingResponse { }
 message GetNeighborsRequest { }
 
 message GetNeighborsResponse {
-    repeated Catalyst.Common.Peer.PeerId Peers = 1;
+    repeated Catalyst.Sdk.Peer.PeerId Peers = 1;
 }
 
 /**
@@ -68,7 +68,7 @@ message GetNeighborsResponse {
  */
 message CandidateDeltaBroadcast {
     bytes Hash = 1;
-    Catalyst.Common.Peer.PeerId ProducerId = 2;
+    Catalyst.Sdk.Peer.PeerId ProducerId = 2;
     bytes PreviousDeltaDfsHash = 3;
 }
 
@@ -80,7 +80,7 @@ message CandidateDeltaBroadcast {
  */
 message FavouriteDeltaBroadcast {
     CandidateDeltaBroadcast Candidate = 1;
-    Catalyst.Common.Peer.PeerId VoterId = 2;
+    Catalyst.Sdk.Peer.PeerId VoterId = 2;
 }
 
 /**
@@ -100,8 +100,8 @@ message TransactionBroadcast {
     uint64 TimeStamp = 2;
     uint64 TransactionFees = 3;
     uint64 LockTime = 4;
-    repeated Catalyst.Common.Transaction.STTransactionEntry STEntries = 5;
-    repeated Catalyst.Common.Transaction.CFTransactionEntry CFEntries = 6;
-    Catalyst.Common.Transaction.TransactionSignature Signature = 7;
-    repeated Catalyst.Common.Transaction.EntryRangeProof EntryRangeProofs = 8;
+    repeated Catalyst.Sdk.Transaction.STTransactionEntry STEntries = 5;
+    repeated Catalyst.Sdk.Transaction.CFTransactionEntry CFEntries = 6;
+    Catalyst.Sdk.Transaction.TransactionSignature Signature = 7;
+    repeated Catalyst.Sdk.Transaction.EntryRangeProof EntryRangeProofs = 8;
 }

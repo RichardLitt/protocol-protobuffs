@@ -19,7 +19,7 @@
 
 syntax = "proto3";
 
-package Catalyst.Common.Delta;
+package Catalyst.Sdk.Delta;
 
 import "Transaction.proto";
 
