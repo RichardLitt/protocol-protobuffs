@@ -1,0 +1,107 @@
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Network.Protocol.Protobuffs <https://github.com/catalyst-network/protocol-protobuffs>
+*
+* Catalyst.Network.Protocol.Protobuffs is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+* 
+* Catalyst.Network.Protocol.Protobuffs is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Network.Protocol.Protobuffs If not, see <https://www.gnu.org/licenses/>.
+*/
+
+syntax = "proto3";
+
+package Catalyst.Messages.Protocol.IPPN;
+
+import "../../Common/Delta.proto";
+import "../../Common/Peer.proto";
+import "../../Common/Transaction.proto";
+
+/**
+* A wrapper around the service message, the contents of service message should be signed by the sender to avoid tampering mid-transit.
+* To verify use message.peerId.publicKey
+*/
+message ProtocolMessageSigned {
+    bytes signature = 1;
+    ProtocolMessage message = 2;
+}
+
+/**
+* Core protocol messages to be sent across the network.
+* - peerId is the sender's peerId
+* - correlationId is a 16 bytes guid used to match responses to their original requests
+* - type_url is the shortened protocol name of the message type being encoded in the value field (cf Any from protobuf WellKnownTypes)
+* - value is the actual value of the message being wrapped (cf Any from protobuf WellKnownTypes)
+*/
+message ProtocolMessage {
+    Catalyst.Common.Peer.PeerId peerId = 1;
+    bytes correlationId = 2;
+    string type_url = 3;
+    bytes value = 4;
+}
+
+message PingRequest { }
+
+message PingResponse { }
+
+message GetNeighborsRequest { }
+
+message GetNeighborsResponse {
+    repeated Catalyst.Common.Peer.PeerId Peers = 1;
+}
+
+/**
+ * CandidateDeltaBroadcast
+ *
+ * DeltaHash: The hash computed for the current delta produced by ProducerId.
+ *	This is meant to be used when voting for most popular hashes.
+ * PreviousDeltaDfsHash: DFS address for the content of the delta preceding this candidate.
+ * ProducerId: Identifier of the producer of the candidate.
+ */
+message CandidateDeltaBroadcast {
+    bytes Hash = 1;
+    Catalyst.Common.Peer.PeerId ProducerId = 2;
+    bytes PreviousDeltaDfsHash = 3;
+}
+
+/**
+ * FavouriteDeltaBroadcast
+ *
+ * CandidateDeltaBroadcast: The candidate favoured by the voter broadcasting this message.
+ * VoterId: The PeerId of the participant submitting its vote to the network.
+ */
+message FavouriteDeltaBroadcast {
+    CandidateDeltaBroadcast Candidate = 1;
+    Catalyst.Common.Peer.PeerId VoterId = 2;
+}
+
+/**
+ * Transaction
+ *
+ * Version: 1 for non-confidential transaction, 2 for confidential transaction
+ * TimeStamp:
+ * TransactionFees: 8 bytes, clear text, fees * 10^12 - always positive
+ * LockTime: 32 bits
+ * STEntries: 0 field for confidential transaction
+ * CFEntries: 0 field for non-confidential transaction
+ * Signature: 64 bytes
+ * EntryRangeProof: 0 field for non-confidential transaction
+ */
+message TransactionBroadcast {
+    uint32 Version = 1;
+    uint64 TimeStamp = 2;
+    uint64 TransactionFees = 3;
+    uint64 LockTime = 4;
+    repeated Catalyst.Common.Transaction.STTransactionEntry STEntries = 5;
+    repeated Catalyst.Common.Transaction.CFTransactionEntry CFEntries = 6;
+    Catalyst.Common.Transaction.TransactionSignature Signature = 7;
+    repeated Catalyst.Common.Transaction.EntryRangeProof EntryRangeProofs = 8;
+}

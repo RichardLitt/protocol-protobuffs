@@ -21,30 +21,7 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 
-package Catalyst.Protocol.Transaction;
-
-/**
- * Transaction
- *
- * Version: 1 for non-confidential transaction, 2 for confidential transaction
- * TimeStamp:
- * TransactionFees: 8 bytes, clear text, fees * 10^12 - always positive
- * LockTime: 32 bits
- * STEntries: 0 field for confidential transaction
- * CFEntries: 0 field for non-confidential transaction
- * Signature: 64 bytes
- * EntryRangeProof: 0 field for non-confidential transaction
- */
-message TransactionBroadcast {
-    uint32 Version = 1;
-    uint64 TimeStamp = 2;
-    uint64 TransactionFees = 3;
-    uint64 LockTime = 4;
-    repeated STTransactionEntry STEntries = 5;
-    repeated CFTransactionEntry CFEntries = 6;
-    TransactionSignature Signature = 7; 
-    repeated EntryRangeProof EntryRangeProofs = 8;
-}
+package Catalyst.Common.Transaction;
 
 /**
  * STTransactionEntry
@@ -114,7 +91,7 @@ message EntryRangeProof {
 /**
  * CoinbaseEntry
  *
- * Version: For now only one verison. Workers would be paid in plain tx.
+ * Version: For now only one version. Workers would be paid in plain tx.
  * Amount: max 8 bytes (always positive).
  */
 message CoinbaseEntry {
