@@ -21,16 +21,16 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 
-package Catalyst.Protocol.Rpc.Node;
+package Catalyst.Protocol.Rpc.NodeRpc;
 
 import "../../Common/Peer.proto";
 
-message RpcMessageSigned {
+message NodeRpcMessageSigned {
     bytes signature = 1;
-    RpcMessage message = 2;
+    NodeRpcMessage message = 2;
 }
 
-message RpcMessage {
+message NodeRpcMessage {
     Catalyst.Common.Peer.PeerId peerId = 1;
     bytes correlationId = 2;
     string type_url = 3;
